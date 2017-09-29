@@ -1,0 +1,29 @@
+
+version: '{build}'
+os: Visual Studio 2017
+
+pull_requests:
+  do_not_increment_build_number: true
+
+branches:
+  only:
+  - master
+
+build_script:
+- ps: .\build.ps1
+
+artifacts:
+  - path: '**\*.tar'
+    name: Tars
+
+deploy:
+  description: 'ci/cd release'
+  provider: GitHub
+  auth_token:
+    secure: uKqbgGZPnAbm7iTJHYmr++71iY6b0jlfQLpE+ry9o7nN52t1vSSl8lzxBt9sPz1b
+  artifact: /.*\.tar/
+  draft: true
+  prerelease: false
+  on:
+    branch: master
+    appveyor_repo_tag: true
