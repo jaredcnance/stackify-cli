@@ -2,6 +2,7 @@
 using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Extensions.DependencyInjection;
 using StackifyCli.Client;
+using StackifyCli.Terminal;
 using StackifyCli.Deployments;
 using StackifyCli.Options;
 
@@ -39,7 +40,7 @@ namespace StackifyCli
         {
             _cli.Command("deploy", deploy =>
             {
-                deploy.HelpOption("-?");
+                deploy.HelpOption("-?| -h | --help");
                 deploy.Description = "Work with deployments";
                 deploy.Command("new", deployNew => ConfigureNew(deployNew));
                 deploy.Command("get", deployGet => ConfigureGet(deployGet));
@@ -71,8 +72,18 @@ namespace StackifyCli
 
         static void Main(string[] args)
         {
-            _cli.OnExecute(() => _cli.ShowHelp());
-            _cli.Execute(args);
+            try
+            {
+                ConsoleSpiner.StartLoading();
+                _cli.OnExecute(() => _cli.ShowHelp());
+                _cli.Execute(args);
+            }
+            catch (Exception e)
+            {
+                ConsoleSpiner.StopLoading();
+                Console.WriteLine(e.Message);
+            }
+            ConsoleSpiner.StopLoading();
         }
     }
 }

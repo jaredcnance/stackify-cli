@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using StackifyCli.Terminal;
 using StackifyCli.Options;
 
 namespace StackifyCli.Deployments
@@ -19,8 +20,16 @@ namespace StackifyCli.Deployments
 
         public async Task GetAsync(DeployOptions options)
         {
-            var deployments = await _service.GetAllAsync(options.ApiKey);
-            Write(deployments, options.Pretty);
+            if (string.IsNullOrWhiteSpace(options.App) || string.IsNullOrWhiteSpace(options.Environment))
+            {
+                var deployments = await _service.GetAllAsync(options.ApiKey);
+                Write(deployments, options.Pretty);
+            }
+            else
+            {
+                var deployments = await _service.GetAsync(options.ApiKey, options.App, options.Environment);
+                Write(deployments, options.Pretty);
+            }
         }
 
         public void New(DeployOptions options)

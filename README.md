@@ -21,15 +21,18 @@ dotnet run {...arguments}
 
 ## Commands
 
-Below are the supported commands. All commands include a `-h | --help` option for getting more info.
+Below are the supported commands. 
+* All commands include a `-h | --help` option for getting more info. 
+* All commands that return data, will return it in JSON format by default, or YAML if the `-p | --pretty` flag is provided
 
 ### Deploy
 
 This command set allows you to work with your Stackify deployments.
 
 ```
-stackify deploy get
-stackify deploy new
+stackify deploy get -k {API_KEY}
+stackify deploy get -k {API_KEY} -a {APP_NAME} -e {ENV_NAME}
+stackify deploy new ...
 ```
 
 ## Options

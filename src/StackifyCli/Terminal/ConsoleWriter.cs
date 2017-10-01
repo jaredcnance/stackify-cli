@@ -1,8 +1,9 @@
 using System;
+using System.Threading;
 using Newtonsoft.Json;
 using YamlDotNet.Serialization;
 
-namespace StackifyCli
+namespace StackifyCli.Terminal
 {
     public interface IConsoleWriter
     {
@@ -12,10 +13,16 @@ namespace StackifyCli
 
     public class ConsoleWriter : IConsoleWriter
     {
-        public void Write(object message) => Console.WriteLine(JsonConvert.SerializeObject(message));
+        public void Write(object message)
+        {
+            ConsoleSpiner.StopLoading();
+            Console.WriteLine(JsonConvert.SerializeObject(message,
+            new JsonSerializerSettings { Formatting = Formatting.Indented }));
+        }
 
         public void WritePretty(object content)
         {
+            ConsoleSpiner.StopLoading();
             var serializer = new SerializerBuilder().Build();
             var yaml = serializer.Serialize(content);
             Console.WriteLine(yaml);

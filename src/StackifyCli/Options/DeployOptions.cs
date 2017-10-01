@@ -6,14 +6,14 @@ namespace StackifyCli.Options
     {
         public static DeployOptions GetOptions(CommandLineApplication cmd)
         {
-            cmd.HelpOption("-?");
+            cmd.HelpOption("-?| -h | --help");
 
             return new DeployOptions(cmd)
             {
-                _appOption = cmd.Option("-a | --app", "Application name (STACKIFY_CLI_APP)", CommandOptionType.SingleValue),
-                _environmentOption = cmd.Option("-e | --env", "Environment name (STACKIFY_CLI_ENV)", CommandOptionType.SingleValue),
-                _versionOption = cmd.Option("-v | --version", "Version (STACKIFY_CLI_VERSION)", CommandOptionType.SingleValue),
-                _prettyOption = cmd.Option("-p | --pretty", "Pretty (STACKIFY_CLI_PRETTY)", CommandOptionType.SingleValue)
+                _appOption = cmd.Option("-a | --app", "Application name [string] (STACKIFY_CLI_APP)", CommandOptionType.SingleValue),
+                _environmentOption = cmd.Option("-e | --env", "Environment name [string] (STACKIFY_CLI_ENV)", CommandOptionType.SingleValue),
+                _versionOption = cmd.Option("-v | --version", "Version [string] (STACKIFY_CLI_VERSION)", CommandOptionType.SingleValue),
+                _prettyOption = cmd.Option("-p | --pretty", "Pretty [flag]", CommandOptionType.NoValue)
             };
         }
 
@@ -25,16 +25,8 @@ namespace StackifyCli.Options
         private CommandOption _prettyOption { get; set; }
 
         public string App => _appOption.HasValue() ? _appOption.Value() : Config.Get("APP");
-        public string Environment => _appOption.HasValue() ? _appOption.Value() : Config.Get("ENVIRONMENT");
-        public string Version => _appOption.HasValue() ? _appOption.Value() : Config.Get("VERSION");
-        public bool Pretty
-        {
-            get
-            {
-                var option = _prettyOption.HasValue() ? _prettyOption.Value() : Config.Get("PRETTY");
-                bool.TryParse(option, out bool pretty);
-                return pretty;
-            }
-        }
+        public string Environment => _environmentOption.HasValue() ? _environmentOption.Value() : Config.Get("ENVIRONMENT");
+        public string Version => _versionOption.HasValue() ? _versionOption.Value() : Config.Get("VERSION");
+        public bool Pretty => _prettyOption.HasValue();
     }
 }
