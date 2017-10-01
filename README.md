@@ -7,7 +7,7 @@ An unsupported CLI for Stackify functions.
 To download the CLI binaries, go to the [releases](https://github.com/jaredcnance/stackify-cli/releases) page and get the latest version for your OS.
 
 
-## Building from Sources
+## Building from Source
 
 To build from source, you will need the [dotnet core SDK](https://www.microsoft.com/net/download/core) installed
 
@@ -20,6 +20,8 @@ dotnet run {...arguments}
 ```
 
 ## Commands
+
+Below are the supported commands. All commands include a `-h | --help` option for getting more info.
 
 ### Deploy
 

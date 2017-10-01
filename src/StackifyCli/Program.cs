@@ -1,5 +1,8 @@
 ﻿using System;
 using McMaster.Extensions.CommandLineUtils;
+using Microsoft.Extensions.DependencyInjection;
+using StackifyCli.Client;
+using StackifyCli.Deployments;
 using StackifyCli.Options;
 
 namespace StackifyCli
@@ -8,6 +11,7 @@ namespace StackifyCli
     {
         private static bool _log;
         private static readonly CommandLineApplication _cli = new CommandLineApplication(throwOnUnexpectedArg: false);
+        private static ServiceProvider _container;
 
         static Program()
         {
@@ -17,7 +21,18 @@ namespace StackifyCli
             _cli = new CommandLineApplication(throwOnUnexpectedArg: false);
             _cli.HelpOption("-? | -h | --help");
 
+            ConfigureContainer();
             ConfigureDeploy();
+        }
+
+        private static void ConfigureContainer()
+        {
+            var services = new ServiceCollection();
+            services.AddSingleton<IApiClient, ApiClient>();
+            services.AddSingleton<IDeploymentService, DeploymentService>();
+            services.AddSingleton<IConsoleWriter, ConsoleWriter>();
+            services.AddSingleton<DeploymentCommandProcessor>();
+            _container = services.BuildServiceProvider();
         }
 
         static void ConfigureDeploy()
@@ -37,7 +52,8 @@ namespace StackifyCli
 
             cmd.Invoke = () =>
             {
-                Console.WriteLine($"GET {options.App}");
+                var processor = _container.GetRequiredService<DeploymentCommandProcessor>();
+                processor.GetAsync(options).Wait();
                 return 1;
             };
         }
@@ -47,7 +63,8 @@ namespace StackifyCli
             var options = DeployOptions.GetOptions(cmd);
             cmd.Invoke = () =>
             {
-                Console.WriteLine($"NEW {options.ApiKey}");
+                var processor = _container.GetRequiredService<DeploymentCommandProcessor>();
+                processor.New(options);
                 return 1;
             };
         }
