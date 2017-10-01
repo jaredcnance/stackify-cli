@@ -1,6 +1,8 @@
 # stackify-cli
+![](https://travis-ci.org/jaredcnance/stackify-cli.svg)
+![](https://ci.appveyor.com/api/projects/status/0xitfocaqtb8w3os?svg=true)
 
-An unsupported CLI for Stackify functions.
+An unsupported cross-platform CLI for Stackify functions.
 
 ## Downloading
 
@@ -27,18 +29,24 @@ Below are the supported commands.
 
 ### Deploy
 
-This command set allows you to work with your Stackify deployments.
+Provides a set of commands for working with your Stackify deployments.
 
 ```
-stackify deploy get -k {API_KEY}
-stackify deploy get -k {API_KEY} -a {APP_NAME} -e {ENV_NAME}
-stackify deploy new ...
+stackify deploy get
+stackify deploy start
+stackify deploy cancel
+stackify deploy complete
 ```
 
 ## Options
 
 Options can either be set in the commands themselves or in environment variables prefixed by `STACKIFY_CLI_`.
 For example, to set your API Key using an environment variable, you can do the following:
+
+cmd:
+```cmd
+setx STACKIFY_CLI_APIKEY "abc123"
+```
 
 powershell:
 
