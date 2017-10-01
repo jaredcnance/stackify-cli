@@ -1,5 +1,5 @@
 # stackify-cli
-![](https://travis-ci.org/jaredcnance/stackify-cli.svg)
+[![](https://travis-ci.org/jaredcnance/stackify-cli.svg)](https://travis-ci.org/jaredcnance/stackify-cli)
 ![](https://ci.appveyor.com/api/projects/status/0xitfocaqtb8w3os?svg=true)
 
 An unsupported cross-platform CLI for Stackify functions.
