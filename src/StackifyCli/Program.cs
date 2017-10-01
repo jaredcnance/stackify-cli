@@ -10,15 +10,11 @@ namespace StackifyCli
 {
     class Program
     {
-        private static bool _log;
         private static readonly CommandLineApplication _cli = new CommandLineApplication(throwOnUnexpectedArg: false);
         private static ServiceProvider _container;
 
         static Program()
         {
-            var envLogValue = Environment.GetEnvironmentVariable("STACKIFY_CLI_LOG");
-            _log = bool.TryParse(envLogValue, out bool shouldLog) ? shouldLog : false;
-
             _cli = new CommandLineApplication(throwOnUnexpectedArg: false);
             _cli.HelpOption("-? | -h | --help");
 
