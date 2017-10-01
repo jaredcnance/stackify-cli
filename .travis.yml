@@ -1,5 +1,8 @@
 language: csharp
 dist: trusty
+os:
+  - linux
+  - osx
 sudo: required
 mono: none
 dotnet: 2.0.0
