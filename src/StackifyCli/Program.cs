@@ -40,17 +40,20 @@ namespace StackifyCli
         {
             _cli.Command("deploy", deploy =>
             {
-                deploy.HelpOption("-?| -h | --help");
+                deploy.HelpOption("-? | -h | --help");
                 deploy.Description = "Work with deployments";
-                deploy.Command("new", deployNew => ConfigureNew(deployNew));
-                deploy.Command("get", deployGet => ConfigureGet(deployGet));
+                deploy.OnExecute(() => deploy.ShowHelp());
+                deploy.Command("start", start => ConfigureStart(start));
+                deploy.Command("cancel", cancel => ConfigureCancel(cancel));
+                deploy.Command("complete", complete => ConfigureComplete(complete));
+                deploy.Command("get", get => ConfigureGet(get));
             });
         }
 
         static void ConfigureGet(CommandLineApplication cmd)
         {
             var options = DeployOptions.GetOptions(cmd);
-
+            cmd.Description = "Get deployments";
             cmd.Invoke = () =>
             {
                 var processor = _container.GetRequiredService<DeploymentCommandProcessor>();
@@ -59,13 +62,38 @@ namespace StackifyCli
             };
         }
 
-        static void ConfigureNew(CommandLineApplication cmd)
+        static void ConfigureComplete(CommandLineApplication cmd)
         {
             var options = DeployOptions.GetOptions(cmd);
+            cmd.Description = "Complete a pending deployment request or create a new, completed deployment";
             cmd.Invoke = () =>
             {
                 var processor = _container.GetRequiredService<DeploymentCommandProcessor>();
-                processor.New(options);
+                processor.CompleteAsync(options).Wait();
+                return 1;
+            };
+        }
+
+        static void ConfigureStart(CommandLineApplication cmd)
+        {
+            var options = DeployOptions.GetOptions(cmd);
+            cmd.Description = "Start a deployment in a pending state. Deployment must be completed or cancelled.";
+            cmd.Invoke = () =>
+            {
+                var processor = _container.GetRequiredService<DeploymentCommandProcessor>();
+                processor.StartAsync(options).Wait();
+                return 1;
+            };
+        }
+
+        static void ConfigureCancel(CommandLineApplication cmd)
+        {
+            var options = DeployOptions.GetOptions(cmd);
+            cmd.Description = "Cancel a pending deployment";
+            cmd.Invoke = () =>
+            {
+                var processor = _container.GetRequiredService<DeploymentCommandProcessor>();
+                processor.CancelAsync(options).Wait();
                 return 1;
             };
         }

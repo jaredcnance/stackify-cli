@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using StackifyCli.Terminal;
 using StackifyCli.Options;
@@ -20,22 +19,13 @@ namespace StackifyCli.Deployments
 
         public async Task GetAsync(DeployOptions options)
         {
-            if (string.IsNullOrWhiteSpace(options.App) || string.IsNullOrWhiteSpace(options.Environment))
-            {
-                var deployments = await _service.GetAllAsync(options.ApiKey);
-                Write(deployments, options.Pretty);
-            }
-            else
-            {
-                var deployments = await _service.GetAsync(options.ApiKey, options.App, options.Environment);
-                Write(deployments, options.Pretty);
-            }
+            var deployments = await _service.GetAsync(options);
+            Write(deployments, options.Pretty);
         }
 
-        public void New(DeployOptions options)
-        {
-            throw new NotImplementedException();
-        }
+        public async Task CompleteAsync(DeployOptions options) => await _service.CompleteAsync(options);
+        public async Task StartAsync(DeployOptions options) => await _service.StartAsync(options);
+        public async Task CancelAsync(DeployOptions options) => await _service.CancelAsync(options);
 
         private void Write(object content, bool pretty)
         {

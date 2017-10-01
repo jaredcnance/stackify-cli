@@ -9,6 +9,7 @@ namespace StackifyCli.Client
     public interface IApiClient
     {
         Task<T> GetAsync<T>(ApiClientConfig config, string route);
+        Task PostAsync(ApiClientConfig config, string route, object content);
     }
 
     public class ApiClient : IApiClient
@@ -29,6 +30,7 @@ namespace StackifyCli.Client
             var request = new HttpRequestMessage(HttpMethod.Post, $"{config.Host}/{route}");
             var json = JsonConvert.SerializeObject(content);
             request.Content = new StringContent(json);
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
             request.Headers.Authorization = new AuthenticationHeaderValue("ApiKey", config.ApiKey);
             var response = await _http.SendAsync(request);
 
